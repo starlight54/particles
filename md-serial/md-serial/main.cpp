@@ -5,14 +5,14 @@
 #include "simulationSpace.h"
 #include "simulationIteratorFactory.h"
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
 	//Register factory classes
 	FactoryRegister::GlobalFactoryRegister();
+	Visualiser::Get()->GlutInit(argc, argv);
 
         SimulationSpace space = SimulationSpace();
         space.InitCube(100);
-        space.AutoInitParticles(1000);
+	space.AutoInitParticles(1000);
 	space.InitIterator();
-	
 }

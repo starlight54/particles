@@ -45,6 +45,9 @@
     <ClCompile Include="simulationSpace.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="visualiser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="makefile" />
@@ -81,6 +84,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SimulatorFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="visualiser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

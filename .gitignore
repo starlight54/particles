@@ -1,3 +1,5 @@
 /md-serial/x64
 /md-serial/*.opensdf
 /md-serial/md-serial/x64
+/md-serial/Debug
+/md-serial/md-serial/Debug

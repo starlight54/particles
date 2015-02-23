@@ -1,6 +1,4 @@
 #include "mdIterator.h"
-#include <stdio.h>
-#include <math.h>
 
 MolDynIterator::MolDynIterator()
 {
@@ -23,7 +21,10 @@ void MolDynIterator::Iterate(ParticleSystem* particles)
 	double cutoffSquaredInvCubed = pow((1 / cutoffSquared), 3);
 	double ecut = 4 * (pow(cutoffSquaredInvCubed, 2) - cutoffSquaredInvCubed);
 
-	for (int c = 0; c < numberIterations; c++) {
+	for (int i = 0; i < numberIterations; i++) {
+
+		glutPostRedisplay();
+		glutMainLoopEvent();
 
 		scaledTotEn = 0;
 		totEn = 0;
@@ -149,6 +150,7 @@ void MolDynIterator::Initialise(ParticleSystem* particles,
 	unsigned long numberIterations, double temperature, double deltaT, 
 	double cutoff, double maxX, double maxY, double maxZ)
 {
+	Visualiser::Get()->SetParticles(particles);
 	this->numberIterations = numberIterations;
 	this->deltaT = deltaT;
 	vel = (double*)malloc(sizeof(double) * particles->numberParticles * 3);

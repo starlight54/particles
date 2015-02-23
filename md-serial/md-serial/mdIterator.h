@@ -4,6 +4,9 @@
 #include "iSimulationIterator.h"
 #include "forceEvaluator.h"
 #include "integrationEvaluator.h"
+#include "visualiser.h"
+#include <stdio.h>
+#include <math.h>
 #include <math.h>
 
 class MolDynIterator : public ISimulationIterator
