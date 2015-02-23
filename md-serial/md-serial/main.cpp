@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
 	FactoryRegister::GlobalFactoryRegister();
 
         SimulationSpace space = SimulationSpace();
-        space.InitCube(10);
+        space.InitCube(100);
         space.AutoInitParticles(1000);
 	space.InitIterator();
 	

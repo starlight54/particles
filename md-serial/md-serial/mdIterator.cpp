@@ -1,5 +1,6 @@
 #include "mdIterator.h"
 #include <stdio.h>
+#include <math.h>
 
 MolDynIterator::MolDynIterator()
 {
@@ -13,8 +14,7 @@ MolDynIterator::~MolDynIterator()
 
 void MolDynIterator::Iterate(ParticleSystem* particles)
 {
-	scaledTotEn = 0;
-	double r[3] = {0, 0, 0};
+	//double r[3] = {0, 0, 0};
 	double xrX;
 	double yrY;
 	double zrZ;
@@ -23,16 +23,19 @@ void MolDynIterator::Iterate(ParticleSystem* particles)
 	double cutoffSquaredInvCubed = pow((1 / cutoffSquared), 3);
 	double ecut = 4 * (pow(cutoffSquaredInvCubed, 2) - cutoffSquaredInvCubed);
 
-	for (int i = 0; i < particles->numberParticles; i++) {
-		force[i * 3 + 0] = 0;
-		force[i * 3 + 1] = 0;
-		force[i * 3 + 2] = 0;
-	}
+	for (int c = 0; c < numberIterations; c++) {
 
-	for (int i = 0; i < numberIterations; i++) {
+		scaledTotEn = 0;
+		totEn = 0;
+
+		for (int i = 0; i < particles->numberParticles; i++) {
+			force[i * 3 + 0] = 0;
+			force[i * 3 + 1] = 0;
+			force[i * 3 + 2] = 0;
+		}
 
 		for (int i = 0; i < particles->numberParticles - 1; i++) {
-			for (int j = 1; j < particles->numberParticles; j++) {
+			for (int j = i + 1; j < particles->numberParticles; j++) {
 				xrX = (particles->pos[i * 3 + 0] -
 					particles->pos[j * 3 + 0]);
 				yrY = (particles->pos[i * 3 + 1] -
@@ -62,8 +65,8 @@ void MolDynIterator::Iterate(ParticleSystem* particles)
 						(scaledScalarForce * zrZ);
 					force[j * 3 + 2] = force[j * 3 + 2] -
 						(scaledScalarForce * zrZ);
-					scaledTotEn += cutoffSquaredInvCubed *
-						(cutoffSquaredInvCubed - 1) - ecut;
+					scaledTotEn += rSquaredInvCubed *
+						(rSquaredInvCubed - 1) - ecut;
 				}
 			}
 		}
@@ -81,27 +84,49 @@ void MolDynIterator::Iterate(ParticleSystem* particles)
 		kinEn = 0;
 
 		for (int i = 0; i < particles->numberParticles; i++) {
-			xrX = 2 * particles->pos[i * 3 + 0] - prevPos[i * 3 + 0] +
-				(pow(deltaT, 2) * force[i * 3 + 0]);
-			yrY = 2 * particles->pos[i * 3 + 1] - prevPos[i * 3 + 1] +
-				(pow(deltaT, 2) * force[i * 3 + 1]);
-			zrZ = 2 * particles->pos[i * 3 + 2] - prevPos[i * 3 + 2] +
-				(pow(deltaT, 2) * force[i * 3 + 2]);
+			double tempXrX = particles->pos[i * 3 + 0] - prevPos[i * 3 + 0];
+			double tempYrY = particles->pos[i * 3 + 1] - prevPos[i * 3 + 1];
+			double tempZrZ = particles->pos[i * 3 + 2] - prevPos[i * 3 + 2];
 
-			vel[i * 3 + 0] = (xrX - prevPos[i * 3 + 0]) / (2 * deltaT);
-			vel[i * 3 + 1] = (yrY - prevPos[i * 3 + 1]) / (2 * deltaT);
-			vel[i * 3 + 2] = (zrZ - prevPos[i * 3 + 2]) / (2 * deltaT);
+			tempXrX = tempXrX - (maxX * (round(tempXrX / maxX)));
+			tempYrY = tempYrY - (maxY * (round(tempYrY / maxY)));
+			tempZrZ = tempZrZ - (maxZ * (round(tempZrZ / maxZ)));
+
+			xrX = (2 * particles->pos[i * 3 + 0]) - (particles->
+				pos[i * 3 + 0] - tempXrX) + (pow(deltaT, 2) * 
+				force[i * 3 + 0]);
+			yrY = (2 * particles->pos[i * 3 + 1]) - (particles->
+				pos[i * 3 + 1] - tempYrY) + (pow(deltaT, 2) *
+				force[i * 3 + 1]);
+			zrZ = (2 * particles->pos[i * 3 + 2]) - (particles->
+				pos[i * 3 + 2] - tempZrZ) + (pow(deltaT, 2) *
+				force[i * 3 + 2]);
+
+			vel[i * 3 + 0] = (xrX - (particles->pos[i * 3 + 0] -
+				tempXrX)) / (2 * deltaT);
+			vel[i * 3 + 1] = (yrY - (particles->pos[i * 3 + 1] -
+				tempYrY)) / (2 * deltaT);
+			vel[i * 3 + 2] = (zrZ - (particles->pos[i * 3 + 2] -
+				tempZrZ)) / (2 * deltaT);
 
 			comVel[0] += vel[i * 3 + 0];
 			comVel[1] += vel[i * 3 + 1];
 			comVel[2] += vel[i * 3 + 2];
 
-			kinEn += pow(comVel[0], 2) + pow(comVel[1], 2) + 
-				pow(comVel[2], 2);
+			kinEn += pow(vel[i * 3 + 0], 2) + pow(vel[i * 3 + 1], 2) +
+				pow(vel[i * 3 + 2], 2);
 
 			prevPos[i * 3 + 0] = particles->pos[i * 3 + 0];
 			prevPos[i * 3 + 1] = particles->pos[i * 3 + 1];
 			prevPos[i * 3 + 2] = particles->pos[i * 3 + 2];
+
+			xrX = fmod(xrX, maxX);
+			yrY = fmod(yrY, maxY);
+			zrZ = fmod(zrZ, maxZ);
+
+			xrX = xrX < 0 ? maxX + xrX : xrX;
+			yrY = yrY < 0 ? maxY + yrY : yrY;
+			zrZ = zrZ < 0 ? maxZ + zrZ : zrZ;
 
 			particles->pos[i * 3 + 0] = xrX;
 			particles->pos[i * 3 + 1] = yrY;
@@ -113,9 +138,10 @@ void MolDynIterator::Iterate(ParticleSystem* particles)
 
 		printf("Instant temp: ");
 		printf("%f", instantTemp);
-
+		printf("\n");
 		printf("Energy per particle: ");
 		printf("%f", energyPerParticle);
+		printf("\n\n");
 	}
 }
 
@@ -164,12 +190,16 @@ void MolDynIterator::Initialise(ParticleSystem* particles,
 		vel[i * 3 + 1] = (vel[i * 3 + 1] - comVel[1]) * velScaleFactor;
 		vel[i * 3 + 2] = (vel[i * 3 + 2] - comVel[2]) * velScaleFactor;
 
-		prevPos[i * 3 + 0] = particles->pos[i * 3 + 0] - (vel[i * 3 + 0]
-			* deltaT);
-		prevPos[i * 3 + 1] = particles->pos[i * 3 + 1] - (vel[i * 3 + 1]
-			* deltaT);
-		prevPos[i * 3 + 2] = particles->pos[i * 3 + 2] - (vel[i * 3 + 2]
-			* deltaT);
+		double prevX = fmod((particles->pos[i * 3 + 0] - (vel[i * 3 + 0]
+			* deltaT)), maxX);
+		double prevY = fmod((particles->pos[i * 3 + 1] - (vel[i * 3 + 1]
+			* deltaT)), maxY);
+		double prevZ = fmod((particles->pos[i * 3 + 2] - (vel[i * 3 + 2]
+			* deltaT)), maxZ);
+
+		prevPos[i * 3 + 0] = prevX < 0 ? maxX + prevX : prevX;
+		prevPos[i * 3 + 1] = prevY < 0 ? maxY + prevY : prevY;
+		prevPos[i * 3 + 2] = prevZ < 0 ? maxZ + prevZ : prevZ;
 	}
 
 }

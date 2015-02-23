@@ -41,6 +41,6 @@ void SimulationSpace::InitIterator()
 
 void SimulationSpace::ExecuteSimulation()
 {
-	simulationIterator->Initialise(particles, 5000, 300, 0.001, 500, 10, 10, 10);
+	simulationIterator->Initialise(particles, 5000, 273, 0.001, 2.5, maxX, maxY, maxZ);
 	simulationIterator->Iterate(particles);
 }
