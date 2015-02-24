@@ -13,6 +13,6 @@ int main(int argc, char* argv[])
 
         SimulationSpace space = SimulationSpace();
         space.InitCube(100);
-	space.AutoInitParticles(100);
+	space.AutoInitParticles(1000);
 	space.InitIterator();
 }

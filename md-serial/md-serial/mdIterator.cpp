@@ -150,12 +150,12 @@ void MolDynIterator::Initialise(ParticleSystem* particles,
 	unsigned long numberIterations, double temperature, double deltaT, 
 	double cutoff, double maxX, double maxY, double maxZ)
 {
-	Visualiser::Get()->SetData(particles, vel);
 	this->numberIterations = numberIterations;
 	this->deltaT = deltaT;
 	vel = (double*)malloc(sizeof(double) * particles->numberParticles * 3);
 	prevPos = (double*)malloc(sizeof(double) * particles->numberParticles * 3);
 	force = (double*)malloc(sizeof(double) * particles->numberParticles * 3);
+	Visualiser::Get()->SetData(particles, vel);
 	cutoffSquared = pow(cutoff, 2);
 	this->maxX = maxX;
 	this->maxY = maxY;

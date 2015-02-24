@@ -38,28 +38,14 @@ void Visualiser::Init()
 	static const GLfloat light1_pos[] = {-100.0, 100.0, 0.0, 1.0};
 	static const GLfloat light2_pos[] = {100, -100, 100, 1.0};
 
-	glLightfv(GL_LIGHT0, GL_POSITION, light1_pos);
-	glLightfv(GL_LIGHT0, GL_AMBIENT, redColour);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, whiteColour);
-	glLightfv(GL_LIGHT0, GL_SPECULAR, whiteColour);
-
-	glLightfv(GL_LIGHT1, GL_POSITION, light2_pos);
-	glLightfv(GL_LIGHT1, GL_AMBIENT, whiteColour);
-	glLightfv(GL_LIGHT1, GL_DIFFUSE, redColour);
-	glLightfv(GL_LIGHT1, GL_SPECULAR, redColour);
-
-	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0);
-	glEnable(GL_LIGHT1);
-
 	glClearColor(0, 0, 0, 0);
 	glLineWidth(1.0);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glOrtho(-100.0, 100.0, -100.0, 100.0, 100.0, -100.0);
 	glRotated(25, 1, 1, 0);
+	//glRotated(90, 1, 0, 0);
 	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
 	glEnable(GL_DEPTH_TEST);
 	glShadeModel(GL_SMOOTH);
 	glEnable(GL_BLEND);
@@ -74,7 +60,7 @@ void Visualiser::Init()
 	glLightfv(GL_LIGHT1, GL_DIFFUSE, redColour);
 	glLightfv(GL_LIGHT1, GL_SPECULAR, redColour);
 
-	glEnable(GL_LIGHTING);
+	//glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
 	glEnable(GL_LIGHT1);
 
@@ -89,59 +75,102 @@ void Visualiser::Draw()
 	glLoadIdentity();
 	glColor3d(1, 1, 1);
 	glutWireCube(100);
-	glColor3d(1, 0, 0);
-	if (particles) {
+	if (particles && vel) {
 		for (int i = 0; i < particles->numberParticles; i++) {
 			glPushMatrix();
 			glTranslated(particles->pos[i * 3 + 0] - 50,
-				particles->pos[i * 3 + 1] - 50, 
+				particles->pos[i * 3 + 1] - 50,
 				particles->pos[i * 3 + 2] - 50);
-
+			glColor3d(1, 0, 0);
 			gluSphere(obj, 1.0, 10, 10);
+			SetZAxisDirection(vel[i * 3 + 0], vel[i * 3 + 1],
+				vel[i * 3 + 2]);
+			modB = sqrt(pow(vel[i * 3 + 0], 2) +
+				pow(vel[i * 3 + 1], 2) + pow(vel[i * 3 + 2], 2));
+			glColor3d(0, 1, 0);
+			gluCylinder(obj, 0.1, 0, modB, 10, 10);
 			glPopMatrix();
 		}
 	}
 	glutSwapBuffers();
 }
 
-void Visualiser::GetQuaternion(double Ax, double Ay, double Az, double Bx, 
-	double By, double Bz)
+void Visualiser::SetZAxisDirection(double x, double y, double z)
 {
-		double norm_u_norm_v = sqrt((pow(Ax, 2) + pow(Ay, 2) + pow(Az,2)) 
-			* (pow(Bx, 2) + pow(By, 2) + pow(Bz, 2)));
-		double real_part = norm_u_norm_v + Ax * Bx + Ay * By + Az * Bz;
-		double Wx, Wy, Wz;
+	modB = sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2));
+	Wx = -x / modB;
+	Wy = -y / modB;
+	Wz = -z / modB;
 
-		if (real_part < 1.e-6f * norm_u_norm_v) {
-			/* If u and v are exactly opposite, rotate 180 degrees
+	double rotAngle = acos(Wz);
+	if (rotAngle != 0) {
+		qX = Wy;
+		qY = -Wx;
+		qZ = 0;
+		modB = sqrt(pow(qX, 2) + pow(qY, 2) + pow(qZ, 2));
+		glRotated(-rotAngle/M_PI*180, qX / modB, qY / modB, qZ / modB);
+	}
+}
+
+Quaternion Visualiser::GetQuaternion(double Bx, double By, double Bz, double Ax,
+	double Ay, double Az)
+{
+	modBSquared = (pow(Bx, 2) + pow(By, 2) + pow(Bz, 2));
+	normUNormV = sqrt((pow(Ax, 2) + pow(Ay, 2) + pow(Az, 2))
+		* modBSquared);
+	realPart = normUNormV + Ax * Bx + Ay * By + Az * Bz;
+
+	if (realPart < 1.e-6f * normUNormV) {
+		/* If u and v are exactly opposite, rotate 180 degrees
 			* around an arbitrary orthogonal axis. Axis normalisation
 			* can happen later, when we normalise the quaternion. */
-			real_part = 0.0f;
-			if (abs(Ax) > abs(Az)) {
-				Wx = -Ay;
-				Wy = Ax;
-				Wz = 0.f;
-			} else {
-				Wx = 0.f;
-				Wy = -Az;
-				Wz = Ay;
-			}
+		realPart = 0.0f;
+		if (abs(Ax) > abs(Az)) {
+			Wx = -Ay;
+			Wy = Ax;
+			Wz = 0.f;
 		} else {
-			/* Otherwise, build quaternion the standard way. */
-			Wx = Ay * Bz - Az * By;
-			Wy = Az * Bx - Ax * Bz;
-			Wz = Ax * By - Ay * Bx;
+			Wx = 0.f;
+			Wy = -Az;
+			Wz = Ay;
 		}
+	} else {
+		/* Otherwise, build quaternion the standard way. */
+		Wx = Ay * Bz - Az * By;
+		Wy = Az * Bx - Ax * Bz;
+		Wz = Ax * By - Ay * Bx;
+	}
 
-		double quat_mod = sqrt(pow(real_part, 2) + pow(Wx, 2) +
-			pow(Wy, 2) + pow(Wz, 2));
+	double quat_mod = sqrt(pow(realPart, 2) + pow(Wx, 2) +
+		pow(Wy, 2) + pow(Wz, 2));
 
-		double qR, qX, qY, qZ;
+	qR = realPart / quat_mod;
+	qX = Wx / quat_mod;
+	qY = Wy / quat_mod;
+	qZ = Wz / quat_mod;
 
-	
+	return Quaternion(qR, qX, qY, qZ);
 }
 
 void Visualiser::Display()
 {
 	Visualiser::Get()->Draw();
+}
+
+Quaternion::Quaternion(double real, double x, double y, double z)
+{
+	this->real = real;
+	this->x = x;
+	this->y = y;
+	this->z = z;
+}
+
+Quaternion::~Quaternion()
+{
+
+}
+
+Quaternion::Quaternion()
+{
+
 }
