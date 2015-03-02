@@ -35,7 +35,7 @@ void Visualiser::Init()
 	static const GLfloat blackColour[4] = {0.0, 0.0, 0.0, 1.0};
 	static const GLfloat whiteColour[4] = {1.0, 1.0, 1.0, 1.0};
 	static const GLfloat redColour[4] = {1.0, 0.3, 0.3, 1.0};
-	static const GLfloat light1_pos[] = {-100.0, 100.0, 0.0, 1.0};
+	static const GLfloat light1_pos[] = {-50.0, 50.0, 0.0, 1.0};
 	static const GLfloat light2_pos[] = {100, -100, 100, 1.0};
 
 	glClearColor(0, 0, 0, 0);
@@ -51,9 +51,9 @@ void Visualiser::Init()
 	glEnable(GL_BLEND);
 
 	glLightfv(GL_LIGHT0, GL_POSITION, light1_pos);
-	glLightfv(GL_LIGHT0, GL_AMBIENT, redColour);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, whiteColour);
-	glLightfv(GL_LIGHT0, GL_SPECULAR, whiteColour);
+	glLightfv(GL_LIGHT0, GL_AMBIENT, whiteColour);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, redColour);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, blackColour);
 
 	glLightfv(GL_LIGHT1, GL_POSITION, light2_pos);
 	glLightfv(GL_LIGHT1, GL_AMBIENT, whiteColour);
@@ -62,7 +62,7 @@ void Visualiser::Init()
 
 	//glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
-	glEnable(GL_LIGHT1);
+	//glEnable(GL_LIGHT1);
 
 	glutDisplayFunc(Visualiser::Display);
 	obj = gluNewQuadric();

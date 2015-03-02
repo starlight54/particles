@@ -7,7 +7,7 @@
 #include "visualiser.h"
 #include <stdio.h>
 #include <math.h>
-#include <math.h>
+#include <fstream>
 
 class MolDynIterator : public ISimulationIterator
 {
