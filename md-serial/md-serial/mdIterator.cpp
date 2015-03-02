@@ -111,13 +111,18 @@ void MolDynIterator::Iterate(ParticleSystem* particles)
 			vel[i * 3 + 2] = (zrZ - (particles->pos[i * 3 + 2] -
 			tempZrZ)) / (2 * deltaT);
 
-				vel[i * 3 + 0] += force[i * 3 + 0] * deltaT;
-				vel[i * 3 + 1] += force[i * 3 + 1] * deltaT;
-				vel[i * 3 + 2] += force[i * 3 + 2] * deltaT;
+			double tempXrX = xrX - prevPos[i * 3 + 0];
+			double tempYrY = yrY - prevPos[i * 3 + 1];
+			double tempZrZ = zrZ - prevPos[i * 3 + 2];
+
+			vel[i * 3 + 0] = (tempXrX) / (2 * deltaT);
+			vel[i * 3 + 1] = (tempYrY) / (2 * deltaT);
+			vel[i * 3 + 2] = (tempZrZ) / (2 * deltaT);
+
 			*/
 
 			xrX = particles->pos[i * 3 + 0] + (vel[i * 3 + 0] *
-				deltaT) + ((force[i * 3 + 0] / 2) * 
+				deltaT) + ((force[i * 3 + 0] / 2) *
 				pow(deltaT, 2));
 
 			yrY = particles->pos[i * 3 + 1] + (vel[i * 3 + 1] *
@@ -128,17 +133,9 @@ void MolDynIterator::Iterate(ParticleSystem* particles)
 				deltaT) + ((force[i * 3 + 2] / 2) *
 				pow(deltaT, 2));
 
-			double tempXrX = xrX - prevPos[i * 3 + 0];
-			double tempYrY = yrY - prevPos[i * 3 + 1];
-			double tempZrZ = zrZ - prevPos[i * 3 + 2];
-
-			tempXrX = tempXrX - (maxX * (round(tempXrX / maxX)));
-			tempYrY = tempYrY - (maxY * (round(tempYrY / maxY)));
-			tempZrZ = tempZrZ - (maxZ * (round(tempZrZ / maxZ)));
-
-			vel[i * 3 + 0] = (tempXrX) / (2 * deltaT);
-			vel[i * 3 + 1] = (tempYrY) / (2 * deltaT);
-			vel[i * 3 + 2] = (tempZrZ) / (2 * deltaT);
+			vel[i * 3 + 0] += force[i * 3 + 0] * deltaT;
+			vel[i * 3 + 1] += force[i * 3 + 1] * deltaT;
+			vel[i * 3 + 2] += force[i * 3 + 2] * deltaT;
 
 			comVel[0] += vel[i * 3 + 0];
 			comVel[1] += vel[i * 3 + 1];
@@ -151,7 +148,6 @@ void MolDynIterator::Iterate(ParticleSystem* particles)
 			prevPos[i * 3 + 1] = particles->pos[i * 3 + 1];
 			prevPos[i * 3 + 2] = particles->pos[i * 3 + 2];
 
-			
 			xrX = fmod(xrX, maxX);
 			yrY = fmod(yrY, maxY);
 			zrZ = fmod(zrZ, maxZ);

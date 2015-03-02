@@ -13,7 +13,7 @@ ParticleSystem::~ParticleSystem()
 
 void ParticleSystem::AutoInit(double maxX, double maxY, double maxZ, unsigned long numberParticles)
 {
-	srand(323);
+	srand(512);
 	this->numberParticles = numberParticles;
         pos = (double*)malloc(sizeof(double) * numberParticles * 3);
 
