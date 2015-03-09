@@ -1,5 +1,4 @@
 #include "simulationSpace.h"
-#include "simulationIteratorFactory.h"
 
 SimulationSpace::SimulationSpace()
 {
@@ -32,15 +31,19 @@ void SimulationSpace::AutoInitParticles(unsigned long numberParticles)
         particles->AutoInit(maxX, maxY, maxZ, numberParticles);
 }
 
-void SimulationSpace::InitIterator()
+void SimulationSpace::InitIterator(double time, double deltaT, double sigma)
 {
 	simulationIterator = SimulationIteratorFactory::Get()->
 		Create("MolDynIterator");
-	this->ExecuteSimulation();
+	unsigned long numIterations = time / deltaT;
+	simulationIterator->Initialise(particles, numIterations, 273, deltaT, 
+		5, maxX, maxY, maxZ);
+	for (int i = 0; i < numIterations; ++i) {
+		simulationIterator->Iterate(particles);
+	}
 }
 
 void SimulationSpace::ExecuteSimulation()
 {
-	simulationIterator->Initialise(particles, 5000, 273, 0.003, 10, maxX, maxY, maxZ);
-	simulationIterator->Iterate(particles);
+
 }

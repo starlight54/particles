@@ -2,6 +2,8 @@
 #define FACTORY_REGISTER_H
 
 #include "simulationIteratorFactory.h"
+#include "forceEvaluatorFactory.h"
+#include "integrationEvaluatorFactory.h"
 
 class FactoryRegister
 {

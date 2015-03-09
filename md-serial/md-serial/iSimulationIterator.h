@@ -16,7 +16,11 @@ public:
 protected:
 	//Common to all iterators?
 	unsigned long numberIterations;
-	double deltaT;
+	float simulationTime;
+	float deltaT;
+	float nIters;
+	float sigma;
+	float epsilon;
 
         //Storage variables for outputs
         //Centre of Mass Velocity

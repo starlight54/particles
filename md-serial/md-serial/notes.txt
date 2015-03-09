@@ -18,7 +18,7 @@ ITERATOR
 - Number of Iterations
 - Integration Method
 
-PARTICLE DATA FORMAT
+PARTICLE DATA FORMAT?
 
 0 - xPos
 1 - yPos

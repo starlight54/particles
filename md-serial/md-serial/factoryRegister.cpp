@@ -13,4 +13,10 @@ void FactoryRegister::GlobalFactoryRegister()
 {
 	SimulationIteratorFactory::Get()->
 		Register<MolDynIterator>("MolDynIterator");
+
+	ForceEvaluatorFactory::Get()->
+		Register<LennardJonesEvaluator>("LennardJones");
+
+	IntegrationEvaluatorFactory::Get()->
+		Register<VelocityVerletIntegrator>("VelocityVerlet");
 }

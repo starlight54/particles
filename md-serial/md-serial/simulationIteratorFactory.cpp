@@ -4,8 +4,8 @@
 
 SimulationIteratorFactory* SimulationIteratorFactory::Get()
 {
-	static SimulationIteratorFactory factory;
-	return &factory;
+	static SimulationIteratorFactory iteratorFactory;
+	return &iteratorFactory;
 }
 
 SimulationIteratorFactory::~SimulationIteratorFactory()

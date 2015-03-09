@@ -2,7 +2,7 @@
 
 ISimulationIterator::ISimulationIterator()
 {
-
+	nIters = simulationTime / deltaT;
 }
 
 ISimulationIterator::~ISimulationIterator()

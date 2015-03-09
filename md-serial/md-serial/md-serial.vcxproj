@@ -121,9 +121,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="factory.cpp" />
     <ClCompile Include="factoryRegister.cpp" />
-    <ClCompile Include="forceEvaluator.cpp" />
-    <ClCompile Include="integrationEvaluator.cpp" />
+    <ClCompile Include="forceEvaluatorFactory.cpp" />
+    <ClCompile Include="iForceEvaluator.cpp" />
+    <ClCompile Include="iIntegrationEvaluator.cpp" />
+    <ClCompile Include="integrationEvaluatorFactory.cpp" />
     <ClCompile Include="iSimulationIterator.cpp" />
     <ClCompile Include="lennardJonesEvaluator.cpp" />
     <ClCompile Include="main.cpp" />
@@ -131,6 +134,7 @@
     <ClCompile Include="particleSystem.cpp" />
     <ClCompile Include="simulationIteratorFactory.cpp" />
     <ClCompile Include="simulationSpace.cpp" />
+    <ClCompile Include="velocityVerletIntegrator.cpp" />
     <ClCompile Include="visualiser.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -140,9 +144,12 @@
     <Text Include="notes.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="factory.h" />
     <ClInclude Include="factoryRegister.h" />
-    <ClInclude Include="forceEvaluator.h" />
-    <ClInclude Include="integrationEvaluator.h" />
+    <ClInclude Include="forceEvaluatorFactory.h" />
+    <ClInclude Include="iForceEvaluator.h" />
+    <ClInclude Include="iIntegrationEvaluator.h" />
+    <ClInclude Include="integrationEvaluatorFactory.h" />
     <ClInclude Include="iSimulationIterator.h" />
     <ClInclude Include="lennardJonesEvaluator.h" />
     <ClInclude Include="mdIterator.h" />
@@ -150,6 +157,7 @@
     <ClInclude Include="simulationIteratorFactory.h" />
     <ClInclude Include="simulationSpace.h" />
     <ClInclude Include="SimulatorFactory.h" />
+    <ClInclude Include="velocityVerletIntegrator.h" />
     <ClInclude Include="visualiser.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,9 +1,10 @@
 #ifndef SIMULATION_ITERATOR_FACTORY_H
 #define SIMULATION_ITERATOR_FACTORY_H
 
-#include "ISimulationIterator.h"
+#include "iSimulationIterator.h"
 #include <string>
 #include <map>
+
 //Need to figure out how to remove the iterator headers from here, nasty!
 #include "mdIterator.h"
 
@@ -11,12 +12,11 @@ class SimulationIteratorFactory
 {
 public:
 	static SimulationIteratorFactory* Get();
-        ~SimulationIteratorFactory();
-	template <typename T>
-        void Register(const char* iteratorTypeName);
+	~SimulationIteratorFactory();
 	ISimulationIterator* Create(std::string iteratorTypeName);
+	template <typename T>
+	void Register(const char* iteratorTypeName);
 private:
-        //SimulationIteratorFactory();
 	template <typename T>
         static ISimulationIterator*  CreateType();
         typedef ISimulationIterator* (*MapCreateType)();

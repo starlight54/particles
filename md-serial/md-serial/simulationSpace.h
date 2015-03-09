@@ -3,6 +3,7 @@
 
 #include "particleSystem.h"
 #include "iSimulationIterator.h"
+#include "simulationIteratorFactory.h"
 
 class SimulationSpace
 {
@@ -14,6 +15,7 @@ public:
         void LoadParticles(ParticleSystem* particles);
         void AutoInitParticles(unsigned long numberParticles);
         void InitIterator();
+	void InitIterator(double time, double deltaT, double sigma);
 	void ExecuteSimulation();
 private:
         double maxX;

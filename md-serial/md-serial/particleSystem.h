@@ -14,6 +14,7 @@ public:
         void CreatePositions();
         unsigned long numberParticles;
         double* pos;
+	float* mass;
 private:
 };
 
