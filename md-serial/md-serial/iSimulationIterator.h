@@ -9,6 +9,7 @@ public:
         ISimulationIterator();
         virtual ~ISimulationIterator();
         virtual void Iterate(ParticleSystem* particles) = 0;
+	virtual void Print(ParticleSystem* particles) = 0;
 	virtual void Initialise(unsigned long numberIterations) = 0;
 	virtual void Initialise(ParticleSystem* particles,
 		unsigned long numberIterations, double temperature, double deltaT, 

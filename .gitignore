@@ -3,3 +3,15 @@
 /md-serial/md-serial/x64
 /md-serial/Debug
 /md-serial/md-serial/Debug
+/md-gpu/md-gpu/*.pdb
+/md-gpu/md-gpu/x64/Debug/md-gpu.tlog/*.tlog
+/md-gpu/md-gpu/x64/Debug/*.obj
+/md-gpu/md-gpu/*.o
+/md-gpu/md-gpu/x64/Debug/*.pdb
+/md-gpu/x64/Debug/*.exe
+/md-gpu/md-gpu/x64/Debug/md-gpu.tlog
+/md-gpu/x64/Debug
+/md-gpu/md-gpu/x64/Debug
+/md-gpu/md-gpu/*.dep
+/md-gpu/md-gpu/*.lib
+/md-gpu/md-gpu/*.exp

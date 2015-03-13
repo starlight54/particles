@@ -18,6 +18,7 @@ class MolDynIterator : public ISimulationIterator
 public:
         MolDynIterator();
         ~MolDynIterator();
+	void Print(ParticleSystem* particles);
 	void Iterate(ParticleSystem* particles);
 	void Initialise(unsigned long numberIterations)
 	{};

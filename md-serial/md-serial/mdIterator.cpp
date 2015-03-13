@@ -15,6 +15,15 @@ void EvaluateParticlesAxisDist()
 
 }
 
+void MolDynIterator::Print(ParticleSystem* particles)
+{
+	std::ofstream output("partVel.txt");
+	for (int i = 0; i < particles->numberParticles; i++) {
+		output << sqrt(pow(vel[i * 3 + 0], 2) + pow(vel[i * 3 + 1], 2) +
+			pow(vel[i * 3 + 2], 2)) << " \n"; // behaves like cout - cout is also a stream
+	}
+}
+
 void MolDynIterator::Iterate(ParticleSystem* particles)
 {
 	//double r[3] = {0, 0, 0};
@@ -24,50 +33,6 @@ void MolDynIterator::Iterate(ParticleSystem* particles)
 	glutMainLoopEvent();
 
 	forceEvaluator->totEn = 0;
-
-	for (int i = 0; i < 3 * particles->numberParticles; ++i) {
-		double forceT = force[i] * deltaT * 0.5;
-		vel[i] += forceT;
-	}
-
-	for (int i = 0; i < 3 * particles->numberParticles; i++) {
-		force[i] = 0;
-	}
-
-	for (int i = 0; i < 3 * particles->numberParticles - 1; i += 3) {
-		for (int j = i + 3; j < 3 * particles->numberParticles; j += 3) {
-			xDist = particles->pos[i] - particles->pos[j];
-			yDist = particles->pos[i + 1] - particles->pos[j + 1];
-			zDist = particles->pos[i + 2] - particles->pos[j + 2];
-
-			xDist = xDist - (maxX * round(xDist / maxX));
-			yDist = yDist - (maxY * round(yDist / maxY));
-			zDist = zDist - (maxZ * round(zDist / maxZ));
-
-			if (forceEvaluator->CheckCutoff(xDist, yDist, zDist)) {
-
-				double scaledForce = forceEvaluator->
-					EvaluateScaledForce();
-				force[i] += scaledForce * xDist;
-				force[j] -= scaledForce * xDist;
-				force[i + 1] += scaledForce * yDist;
-				force[j + 1] -= scaledForce * yDist;
-				force[i + 2] += scaledForce * zDist;
-				force[j + 2] -= scaledForce * zDist;
-
-				forceEvaluator->EvaluateEnergy();
-			}
-		}
-	}
-
-	for (int i = 0; i < 3 * particles->numberParticles; i++) {
-		force[i] = force[i] * 24;
-	}
-
-	double totEn = forceEvaluator->totEn * 4;
-
-	//Now integrate!
-	comVel[0] = comVel[1] = comVel[2] = 0;
 	kinEn = 0;
 	int c = 0;
 
@@ -77,7 +42,7 @@ void MolDynIterator::Iterate(ParticleSystem* particles)
 			c = 0;
 		}
 
-		double newPos = integrator->Evaluate(particles->pos[i], vel[i], 
+		double newPos = integrator->Evaluate(particles->pos[i], vel[i],
 			force[i], deltaT);
 		/*
 		double tempXrX = particles->pos[i * 3 + 0] - prevPos[i * 3 + 0];
@@ -138,9 +103,54 @@ void MolDynIterator::Iterate(ParticleSystem* particles)
 		newPos = newPos < 0 ? boundaryWidth + newPos : newPos;
 
 		particles->pos[i] = newPos;
+		++c;
 
-		comVel[c++] += vel[i];
+		//comVel[c++] += vel[i];
 	}
+
+	for (int i = 0; i < 3 * particles->numberParticles; i++) {
+		force[i] = 0;
+	}
+
+	for (int i = 0; i < 3 * particles->numberParticles - 1; i += 3) {
+		for (int j = i + 3; j < 3 * particles->numberParticles; j += 3) {
+			xDist = particles->pos[j] - particles->pos[i];
+			yDist = particles->pos[j + 1] - particles->pos[i + 1];
+			zDist = particles->pos[j + 2] - particles->pos[i + 2];
+
+			xDist = xDist - (maxX * round(xDist / maxX));
+			yDist = yDist - (maxY * round(yDist / maxY));
+			zDist = zDist - (maxZ * round(zDist / maxZ));
+
+			if (forceEvaluator->CheckCutoff(xDist, yDist, zDist)) {
+
+				double scaledForce = forceEvaluator->
+					EvaluateScaledForce();
+				force[i] -= scaledForce * xDist;
+				force[j] += scaledForce * xDist;
+				force[i + 1] -= scaledForce * yDist;
+				force[j + 1] += scaledForce * yDist;
+				force[i + 2] -= scaledForce * zDist;
+				force[j + 2] += scaledForce * zDist;
+
+				forceEvaluator->EvaluateEnergy();
+			}
+		}
+	}
+
+	for (int i = 0; i < 3 * particles->numberParticles; i++) {
+		force[i] = force[i] * 24;
+	}
+
+	for (int i = 0; i < 3 * particles->numberParticles; ++i) {
+		double forceT = force[i] * deltaT * 0.5;
+		vel[i] += forceT;
+	}
+
+	double totEn = forceEvaluator->totEn;
+
+	//Now integrate!
+	//comVel[0] = comVel[1] = comVel[2] = 0;
 
 	instantTemp = kinEn / (3 * particles->numberParticles);
 	energyPerParticle = (totEn + (0.5 * kinEn)) / particles->numberParticles;
@@ -153,12 +163,15 @@ void MolDynIterator::Iterate(ParticleSystem* particles)
 	printf("\n\n");
 
 	/*
-	std::ofstream output("partVel.txt");
-	for (int i = 0; i < particles->numberParticles; i++) {
-		output << sqrt(pow(vel[i * 3 + 0], 2) + pow(vel[i * 3 + 1], 2) +
-			pow(vel[i * 3 + 2], 2)) << " \n"; // behaves like cout - cout is also a stream
-	}
-	}*/
+	printf("Com Vel: ");
+	printf("%f", comVel[0]);
+	printf("\n");
+	printf("%f", comVel[1]);
+	printf("\n");
+	printf("%f", comVel[2]);
+	printf("\n\n");
+	*/
+
 }
 
 void MolDynIterator::Initialise(ParticleSystem* particles,
@@ -202,23 +215,24 @@ void MolDynIterator::Initialise(ParticleSystem* particles,
 		comVel[2] += velZ;
 
 		//Scalar so have to work it out now...
-		kinEn += pow(velX, 2) + pow(velY, 2) + pow(velZ, 2);
+		//kinEn += pow(velX, 2) + pow(velY, 2) + pow(velZ, 2);
 	}
 
 	comVel[0] = comVel[0] / particles->numberParticles;
 	comVel[1] = comVel[1] / particles->numberParticles;
 	comVel[2] = comVel[2] / particles->numberParticles;
 
-	kinEn = kinEn / particles->numberParticles;
+	//kinEn = kinEn / particles->numberParticles;
 
-	comVel[0] = comVel[1] = comVel[2] = 0;
-	double velScaleFactor = 1; // sqrt((3 * temperature) / kinEn);
+	//comVel[0] = comVel[1] = comVel[2] = 0;
+	double velScaleFactor = 0; // sqrt((3 * temperature) / kinEn);
 
 	for (int i = 0; i < particles->numberParticles; i++) {
 		vel[i * 3 + 0] = (vel[i * 3 + 0] - comVel[0]) * velScaleFactor;
 		vel[i * 3 + 1] = (vel[i * 3 + 1] - comVel[1]) * velScaleFactor;
 		vel[i * 3 + 2] = (vel[i * 3 + 2] - comVel[2]) * velScaleFactor;
 
+		/*
 		double prevX = fmod((particles->pos[i * 3 + 0] + (vel[i * 3 + 0]
 			* deltaT)), maxX);
 		double prevY = fmod((particles->pos[i * 3 + 1] + (vel[i * 3 + 1]
@@ -229,8 +243,40 @@ void MolDynIterator::Initialise(ParticleSystem* particles,
 		particles->pos[i * 3 + 0] = prevX < 0 ? maxX + prevX : prevX;
 		particles->pos[i * 3 + 1] = prevY < 0 ? maxY + prevY : prevY;
 		particles->pos[i * 3 + 2] = prevZ < 0 ? maxZ + prevZ : prevZ;
+		*/
 	}
 
+	for (int i = 0; i < 3 * particles->numberParticles - 1; i += 3) {
+		for (int j = i + 3; j < 3 * particles->numberParticles; j += 3) {
+			xDist = particles->pos[j] - particles->pos[i];
+			yDist = particles->pos[j + 1] - particles->pos[i + 1];
+			zDist = particles->pos[j+ 2] - particles->pos[i + 2];
+
+			xDist = xDist - (maxX * round(xDist / maxX));
+			yDist = yDist - (maxY * round(yDist / maxY));
+			zDist = zDist - (maxZ * round(zDist / maxZ));
+
+			if (forceEvaluator->CheckCutoff(xDist, yDist, zDist)) {
+
+				double scaledForce = forceEvaluator->
+					EvaluateScaledForce();
+				force[i] -= scaledForce * xDist;
+				force[j] += scaledForce * xDist;
+				force[i + 1] -= scaledForce * yDist;
+				force[j + 1] += scaledForce * yDist;
+				force[i + 2] -= scaledForce * zDist;
+				force[j + 2] += scaledForce * zDist;
+
+				forceEvaluator->EvaluateEnergy();
+			}
+		}
+	}
+
+	for (int i = 0; i < 3 * particles->numberParticles; i++) {
+		force[i] = force[i] * 24;
+	}
+
+	double totEn = forceEvaluator->totEn;
 }
 
 void MolDynIterator::CreateVelocities()

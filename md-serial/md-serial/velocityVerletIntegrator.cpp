@@ -15,7 +15,7 @@ double VelocityVerletIntegrator::Evaluate(double pos, double &vel, double force,
 {
 	double forceT = force * deltaT * 0.5;
 	vel += forceT;
-	double newPos = pos + vel * deltaT + 2 * forceT;
+	double newPos = pos + vel * deltaT + deltaT * forceT;
 
 	return newPos;
 }

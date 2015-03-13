@@ -33,7 +33,7 @@ bool LennardJonesEvaluator::CheckCutoff(double xDist, double yDist, double zDist
 
 void LennardJonesEvaluator::EvaluateEnergy()
 {
-	totEn += rSquaredInvCubed *
+	totEn += 4 * rSquaredInvCubed *
 		(rSquaredInvCubed - 1) - ecut;
 }
 
@@ -46,5 +46,5 @@ double LennardJonesEvaluator::EvaluateScaledForce()
 {
 	double rSquaredInv = 1 / rSquared;
 	rSquaredInvCubed = rSquaredInv * rSquaredInv * rSquaredInv;
-	return 10 * rSquaredInv * rSquaredInvCubed * (2 * rSquaredInvCubed - 1);
+	return rSquaredInv * rSquaredInvCubed * (2 * rSquaredInvCubed - 1);
 }

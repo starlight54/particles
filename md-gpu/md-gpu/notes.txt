@@ -1,0 +1,26 @@
+INPUTS
+
+SIMULATION SPACE
+
+- World Size
+- Cell Size
+- Must accept MATRIX INPUTS for world
+- Simluation Type
+
+PARTICLES
+
+- Number of Particles
+- Must accept particle matrices for the various elements
+
+ITERATOR
+
+- Time Step
+- Number of Iterations
+- Integration Method
+
+PARTICLE DATA FORMAT?
+
+0 - xPos
+1 - yPos
+2 - zPos
+3 - mass (optional)
