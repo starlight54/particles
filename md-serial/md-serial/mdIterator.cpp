@@ -162,6 +162,10 @@ void MolDynIterator::Iterate(ParticleSystem* particles)
 	printf("%f", energyPerParticle);
 	printf("\n\n");
 
+	std::ofstream output("partEn.txt", std::ios_base::app);
+	output << energyPerParticle << "\n";
+
+
 	/*
 	printf("Com Vel: ");
 	printf("%f", comVel[0]);
@@ -225,7 +229,7 @@ void MolDynIterator::Initialise(ParticleSystem* particles,
 	//kinEn = kinEn / particles->numberParticles;
 
 	//comVel[0] = comVel[1] = comVel[2] = 0;
-	double velScaleFactor = 0; // sqrt((3 * temperature) / kinEn);
+	double velScaleFactor = 1; // sqrt((3 * temperature) / kinEn);
 
 	for (int i = 0; i < particles->numberParticles; i++) {
 		vel[i * 3 + 0] = (vel[i * 3 + 0] - comVel[0]) * velScaleFactor;

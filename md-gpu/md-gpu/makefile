@@ -1,8 +1,8 @@
 CFLAGS = -g -idp /cygwin/ -ddp /cygwin/ -m 64
-LDFLAGS = -L"C:\freeglut\lib\x64" -l"freeglut" -I"C:\freeglut\include"
+LDFLAGS = -L"C:\freeglut\lib\x64" -l"freeglut" -I"C:\freeglut\include" -I ""
 
 %.o : %.cpp
-	nvcc -c $^ $(CFLAGS) $(LDFLAGS) -o $@
+	nvcc -x cu -c $^ $(CFLAGS) $(LDFLAGS) -o $@
 	nvcc -M $^ $(CFLAGS) $(LDFLAGS) > $@.dep
 
 %.o : %.c

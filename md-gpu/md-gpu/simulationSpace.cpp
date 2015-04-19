@@ -33,6 +33,7 @@ void SimulationSpace::AutoInitParticles(unsigned long numberParticles)
 
 void SimulationSpace::InitIterator(double time, double deltaT, double sigma)
 {
+	
 	simulationIterator = SimulationIteratorFactory::Get()->
 		Create("MolDynIterator");
 	unsigned long numIterations = time / deltaT;

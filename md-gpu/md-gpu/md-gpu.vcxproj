@@ -184,8 +184,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="makefile" />
-    <None Include="mdIterator.cu" />
-    <None Include="mdIterator.cuh" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="notes.txt" />
