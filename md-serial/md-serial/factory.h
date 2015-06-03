@@ -1,6 +1,6 @@
 #ifndef FACTORY_H
 #define FACTORY_H
-
+/*
 #include <string>
 #include <map>
 
@@ -16,5 +16,5 @@ void Factory::Register(const char* typeName)
 {
 	typeMap[typeName] = &CreateType < T > ;
 }
-
+*/
 #endif

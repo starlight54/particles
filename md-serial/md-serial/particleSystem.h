@@ -2,6 +2,7 @@
 #define PARTICLE_SYSTEM_H
 
 #include <stdlib.h>
+#include "dSFMT.h"
 
 class ParticleSystem
 {
@@ -15,6 +16,7 @@ public:
         unsigned long numberParticles;
         double* pos;
 	float* mass;
+	dsfmt_t dsfmtRand;
 private:
 };
 

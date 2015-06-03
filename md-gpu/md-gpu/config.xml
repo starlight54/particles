@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Config file for particle simulation -->
+<config>
+	<space>
+		<shape>cube</shape>
+		<x>100</x>
+		<y>100</y>
+		<z>100</z>
+		<boundary>periodic</boundary>
+	</space>
+	<particles>
+		<number>1000</number>
+		<location></location>
+		<placement>grid</placement>
+	</particles>
+	<iterator>
+		<type>MolDynIterator</type>
+		<simulationTime>10</simulationTime>
+		<timeStep>0.001</timeStep>
+	</iterator>
+</config>

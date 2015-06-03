@@ -43,8 +43,8 @@ void Visualiser::Init()
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glOrtho(-100.0, 100.0, -100.0, 100.0, 100.0, -100.0);
-	//glRotated(25, 1, 1, 0);
-	glRotated(90, 1, 0, 0);
+	glRotated(25, 1, 1, 0);
+	//glRotated(90,0,1,0);
 	glMatrixMode(GL_MODELVIEW);
 	glEnable(GL_DEPTH_TEST);
 	glShadeModel(GL_SMOOTH);
@@ -75,6 +75,7 @@ void Visualiser::Draw()
 	glLoadIdentity();
 	glColor3d(1, 1, 1);
 	glutWireCube(100);
+	//glutSolidCylinder()
 	if (particles && vel) {
 		for (int i = 0; i < particles->numParticles; i++) {
 			glPushMatrix();

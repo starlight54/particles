@@ -2,8 +2,10 @@
 #define PARTICLE_SYSTEM_H
 
 #include "configManager.h"
+#include "cudaManaged.h"
 #include <math.h>
 #include <stdlib.h>
+#include "dSFMT.h"
 
 class ParticleSystem
 {
@@ -17,8 +19,10 @@ public:
         unsigned long numParticles;
         double* pos;
 	float* mass;
-	double numThreadsPerBlock;
-	unsigned long numBlocks; //Excessive!?
+	int numThreadsPerBlock;
+	int numBlocks; //Excessive!?
+	int seed;
+	dsfmt_t dsfmtRand;
 private:
 };
 

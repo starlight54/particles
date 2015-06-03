@@ -15,4 +15,11 @@ void ConfigManager::Initialise()
 {
 	//GPU Init
 	cudaGetDeviceProperties(&device, 0);
+	//config.LoadFile("config.xml");
+	//root = config.RootElement();
+}
+
+string ConfigManager::GetValue(string value)
+{
+	return "";
 }

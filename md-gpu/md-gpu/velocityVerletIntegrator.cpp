@@ -10,7 +10,7 @@ VelocityVerletIntegrator::~VelocityVerletIntegrator()
 
 }
 
-double VelocityVerletIntegrator::Evaluate(double pos, double &vel, double force, 
+__device__ double VelocityVerletIntegrator::Evaluate(double pos, double &vel, double force, 
 	double deltaT)
 {
 	double forceT = force * deltaT * 0.5;

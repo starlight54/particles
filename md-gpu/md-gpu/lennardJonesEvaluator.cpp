@@ -21,7 +21,7 @@ void LennardJonesEvaluator::Initialise(double cutoff)
 		cutoffSquaredInvCubed);
 }
 
-__device__ bool LennardJonesEvaluator::CheckCutoff(double xDist, double yDist, double zDist)
+__host__ __device__ bool LennardJonesEvaluator::CheckCutoff(double xDist, double yDist, double zDist)
 {
 	rSquared = xDist * xDist + yDist * yDist + zDist * zDist;
 	if (rSquared <= cutoffSquared) {
@@ -31,7 +31,7 @@ __device__ bool LennardJonesEvaluator::CheckCutoff(double xDist, double yDist, d
 	return false;
 }
 
-__device__ void LennardJonesEvaluator::EvaluateEnergy()
+__host__ __device__ void LennardJonesEvaluator::EvaluateEnergy()
 {
 	totEn += 4 * rSquaredInvCubed *
 		(rSquaredInvCubed - 1) - ecut;
@@ -42,7 +42,7 @@ void LennardJonesEvaluator::EvaluateParticlePair(unsigned long i, unsigned long 
 
 }
 
-__device__ double LennardJonesEvaluator::EvaluateScaledForce()
+__host__ __device__ double LennardJonesEvaluator::EvaluateScaledForce()
 {
 	double rSquaredInv = 1 / rSquared;
 	rSquaredInvCubed = rSquaredInv * rSquaredInv * rSquaredInv;

@@ -63,6 +63,12 @@
     <ClInclude Include="visualiser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="globalDeviceHeader.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cudaManaged.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="factory.cpp">

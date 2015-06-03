@@ -101,12 +101,12 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Users\Mike\Documents\UniSubmissions\Project\tinyxml2-master;C:\freeglut\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\tinyxml2-3.0.0\tinyxml2-3.0.0;C:\freeglut\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\Mike\Documents\UniSubmissions\Project\tinyxml2-master\tinyxml2\bin\x64-Debug-Lib;C:\freeglut\lib\x64;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v6.5\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\tinyxml2-3.0.0\tinyxml2-3.0.0\tinyxml2\bin\x64-Release-Lib;C:\freeglut\lib\x64;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v7.0\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>freeglut.lib;OpenGL32.lib;GlU32.lib;tinyxml2.lib;cuda.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -148,9 +148,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="configManager.h" />
+    <ClInclude Include="cudaManaged.h" />
     <ClInclude Include="factory.h" />
     <ClInclude Include="factoryRegister.h" />
     <ClInclude Include="forceEvaluatorFactory.h" />
+    <ClInclude Include="globalDeviceHeader.h" />
     <ClInclude Include="iForceEvaluator.h" />
     <ClInclude Include="iIntegrationEvaluator.h" />
     <ClInclude Include="integrationEvaluatorFactory.h" />

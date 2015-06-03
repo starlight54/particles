@@ -9,7 +9,7 @@ public:
 	VelocityVerletIntegrator();
 	~VelocityVerletIntegrator();
 	void Evaluate();
-	double Evaluate(double pos, double &vel, double force, double deltaT);
+	__device__ double Evaluate(double pos, double &vel, double force, double deltaT);
 };
 
 #endif
