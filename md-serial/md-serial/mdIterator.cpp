@@ -44,47 +44,7 @@ void MolDynIterator::Iterate(ParticleSystem* particles)
 
 		double newPos = integrator->Evaluate(particles->pos[i], vel[i],
 			force[i], deltaT);
-		/*
-		double tempXrX = particles->pos[i * 3 + 0] - prevPos[i * 3 + 0];
-		double tempYrY = particles->pos[i * 3 + 1] - prevPos[i * 3 + 1];
-		double tempZrZ = particles->pos[i * 3 + 2] - prevPos[i * 3 + 2];
 
-		tempXrX = tempXrX - (maxX * (round(tempXrX / maxX)));
-		tempYrY = tempYrY - (maxY * (round(tempYrY / maxY)));
-		tempZrZ = tempZrZ - (maxZ * (round(tempZrZ / maxZ)));
-
-		xrX = (2 * particles->pos[i * 3 + 0]) - (particles->
-		pos[i * 3 + 0] - tempXrX) + (pow(deltaT, 2) *
-		force[i * 3 + 0]);
-		yrY = (2 * particles->pos[i * 3 + 1]) - (particles->
-		pos[i * 3 + 1] - tempYrY) + (pow(deltaT, 2) *
-		force[i * 3 + 1]);
-		zrZ = (2 * particles->pos[i * 3 + 2]) - (particles->
-		pos[i * 3 + 2] - tempZrZ) + (pow(deltaT, 2) *
-		force[i * 3 + 2]);
-
-		vel[i * 3 + 0] = (xrX - (particles->pos[i * 3 + 0] -
-		tempXrX)) / (2 * deltaT);
-		vel[i * 3 + 1] = (yrY - (particles->pos[i * 3 + 1] -
-		tempYrY)) / (2 * deltaT);
-		vel[i * 3 + 2] = (zrZ - (particles->pos[i * 3 + 2] -
-		tempZrZ)) / (2 * deltaT);
-
-		double tempXrX = xrX - prevPos[i * 3 + 0];
-		double tempYrY = yrY - prevPos[i * 3 + 1];
-		double tempZrZ = zrZ - prevPos[i * 3 + 2];
-
-		vel[i * 3 + 0] = (tempXrX) / (2 * deltaT);
-		vel[i * 3 + 1] = (tempYrY) / (2 * deltaT);
-		vel[i * 3 + 2] = (tempZrZ) / (2 * deltaT);
-
-		*/
-
-		/*
-		prevPos[i * 3 + 0] = particles->pos[i * 3 + 0];
-		prevPos[i * 3 + 1] = particles->pos[i * 3 + 1];
-		prevPos[i * 3 + 2] = particles->pos[i * 3 + 2];
-		*/
 		double boundaryWidth = 0;
 
 		if (c == 0) {
@@ -162,19 +122,8 @@ void MolDynIterator::Iterate(ParticleSystem* particles)
 	printf("%f", energyPerParticle);
 	printf("\n\n");
 
-	std::ofstream output("partEn250005r4.txt", std::ios_base::app);
-	output << energyPerParticle << "\n";
-
-
-	/*
-	printf("Com Vel: ");
-	printf("%f", comVel[0]);
-	printf("\n");
-	printf("%f", comVel[1]);
-	printf("\n");
-	printf("%f", comVel[2]);
-	printf("\n\n");
-	*/
+	//std::ofstream output("partEn250005r4.txt", std::ios_base::app);
+	//output << energyPerParticle << "\n";
 
 }
 
@@ -235,19 +184,6 @@ void MolDynIterator::Initialise(ParticleSystem* particles,
 		vel[i * 3 + 0] = (vel[i * 3 + 0] - comVel[0]) * velScaleFactor;
 		vel[i * 3 + 1] = (vel[i * 3 + 1] - comVel[1]) * velScaleFactor;
 		vel[i * 3 + 2] = (vel[i * 3 + 2] - comVel[2]) * velScaleFactor;
-
-		/*
-		double prevX = fmod((particles->pos[i * 3 + 0] + (vel[i * 3 + 0]
-			* deltaT)), maxX);
-		double prevY = fmod((particles->pos[i * 3 + 1] + (vel[i * 3 + 1]
-			* deltaT)), maxY);
-		double prevZ = fmod((particles->pos[i * 3 + 2] + (vel[i * 3 + 2]
-			* deltaT)), maxZ);
-
-		particles->pos[i * 3 + 0] = prevX < 0 ? maxX + prevX : prevX;
-		particles->pos[i * 3 + 1] = prevY < 0 ? maxY + prevY : prevY;
-		particles->pos[i * 3 + 2] = prevZ < 0 ? maxZ + prevZ : prevZ;
-		*/
 	}
 
 	for (int i = 0; i < 3 * particles->numberParticles - 1; i += 3) {

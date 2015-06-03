@@ -18,9 +18,6 @@
     <ClInclude Include="configManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="factory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="factoryRegister.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -54,26 +51,14 @@
     <ClInclude Include="simulationSpace.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SimulatorFactory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="velocityVerletIntegrator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="visualiser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="globalDeviceHeader.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cudaManaged.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="factory.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="factoryRegister.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

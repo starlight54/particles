@@ -74,108 +74,13 @@ public:
 	void UpdatePositions(ParticleSystem* particles);
 	void UpdateForces(ParticleSystem* particles);
 	void UpdateVelocitiesT(unsigned long numParticles);
-	/*
-	__device__ void DeviceUpdateVelocitiesT(unsigned long numParticles, double* deviceForce,
-		double deltaT, double* deviceVel, int pid);
-	__device__ void DeviceUpdateForces(unsigned long numParticles, double* deviceForce,
-		double* devicePos, double maxX, double maxY, double maxZ, double* devTotEn, double cutoffSquared, int pid);
-	__device__ void DeviceUpdatePositions(unsigned long numParticles,
-		double* devicePos, double* deviceVel, double* deviceForce, double deltaT, double maxX,
-		double maxY, double maxZ, double* devKinEn, int pid);
-		*/
-
-private:
-	/*
-        void CreateVelocities();
-        void CreateInitPrevPos();
-	IForceEvaluator* forceEvaluator;
-        IIntegrationEvaluator* integrator;
-
-        double* prevPos;
-        double* vel;
-        double* force;
-
-	double* devicePos;
-	double* deviceVel;
-	double* deviceForce;
-
-	double maxX;
-	double maxY;
-	double maxZ;
-	double cutoff;
-	double xDist;
-	double yDist;
-	double zDist;
-	*/
 };
 
-#if 0
-__global__ inline void DeviceIterate(MolDynIterator* iterator, unsigned long numParticles, double* devicePos, double* deviceVel, double* deviceForce, double deltaT, double maxX,
-	double maxY, double maxZ, double* devKinEn, double cutoff, double* devTotEn)
-{
-	//double r[3] = {0, 0, 0};
-	//Move this out!
-
-	//glutPostRedisplay();
-	//glutMainLoopEvent();
-
-	int pid = (blockIdx.x * blockDim.x) + threadIdx.x;
-	devTotEn[0] = 0;
-	devKinEn[0] = 0;
-
-	iterator->DeviceUpdatePositions(numParticles,
-		devicePos, deviceVel, deviceForce, deltaT, maxX, maxY, maxZ, devKinEn, pid);
-
-	iterator->DeviceUpdateForces(numParticles, deviceForce,
-		devicePos, maxX, maxY, maxZ, devTotEn, cutoff, pid);
-
-	iterator->DeviceUpdateVelocitiesT(numParticles, deviceForce,
-		deltaT, deviceVel, pid);
-
-	//double totEn = devTotEn[0];
-
-	//Now integrate!
-	//comVel[0] = comVel[1] = comVel[2] = 0;
-	//
-
-	if (pid == numParticles - 1) {
-		double instantTemp = devKinEn[0] / (3 * numParticles);
-		double energyPerParticle = (devTotEn[0] + (0.5 * devKinEn[0])) / numParticles;
-
-		printf("Instant temp: ");
-		printf("%f", instantTemp);
-		printf("\n");
-		printf("Energy per particle: ");
-		printf("%f", energyPerParticle);
-		printf("\n\n");
-	}
-
-	//std::ofstream output("partEn250005r4.txt", std::ios_base::app);
-	//output << iterator->energyPerParticle << "\n";
-
-	/*
-	printf("Com Vel: ");
-	printf("%f", comVel[0]);
-	printf("\n");
-	printf("%f", comVel[1]);
-	printf("\n");
-	printf("%f", comVel[2]);
-	printf("\n\n");
-	*/
-};
-#endif
 
 __global__ inline void DeviceUpdatePositions(unsigned long numParticles,
 	double* devicePos, double* deviceVel, double* deviceForce, double deltaT, double maxX,
 	double maxY, double maxZ, double* devKinEn)
 {
-
-	/*
-
-	double newPos = integrator->Evaluate(devicePos[i], deviceVel[i],
-	deviceForce[i], deltaT);
-
-	*/
 	int pid = ((blockIdx.x * blockDim.x) + threadIdx.x) * 3;
 	if (pid >= numParticles * 3) {
 		return;
@@ -189,47 +94,6 @@ __global__ inline void DeviceUpdatePositions(unsigned long numParticles,
 		deviceVel[pid + i] += forceT;
 		double newPos = devicePos[pid + i] + deviceVel[pid + i] * deltaT + deltaT * forceT;
 
-		/*
-		double tempXrX = particles->pos[i * 3 + 0] - prevPos[i * 3 + 0];
-		double tempYrY = particles->pos[i * 3 + 1] - prevPos[i * 3 + 1];
-		double tempZrZ = particles->pos[i * 3 + 2] - prevPos[i * 3 + 2];
-
-		tempXrX = tempXrX - (maxX * (round(tempXrX / maxX)));
-		tempYrY = tempYrY - (maxY * (round(tempYrY / maxY)));
-		tempZrZ = tempZrZ - (maxZ * (round(tempZrZ / maxZ)));
-
-		xrX = (2 * particles->pos[i * 3 + 0]) - (particles->
-		pos[i * 3 + 0] - tempXrX) + (pow(deltaT, 2) *
-		force[i * 3 + 0]);
-		yrY = (2 * particles->pos[i * 3 + 1]) - (particles->
-		pos[i * 3 + 1] - tempYrY) + (pow(deltaT, 2) *
-		force[i * 3 + 1]);
-		zrZ = (2 * particles->pos[i * 3 + 2]) - (particles->
-		pos[i * 3 + 2] - tempZrZ) + (pow(deltaT, 2) *
-		force[i * 3 + 2]);
-
-		vel[i * 3 + 0] = (xrX - (particles->pos[i * 3 + 0] -
-		tempXrX)) / (2 * deltaT);
-		vel[i * 3 + 1] = (yrY - (particles->pos[i * 3 + 1] -
-		tempYrY)) / (2 * deltaT);
-		vel[i * 3 + 2] = (zrZ - (particles->pos[i * 3 + 2] -
-		tempZrZ)) / (2 * deltaT);
-
-		double tempXrX = xrX - prevPos[i * 3 + 0];
-		double tempYrY = yrY - prevPos[i * 3 + 1];
-		double tempZrZ = zrZ - prevPos[i * 3 + 2];
-
-		vel[i * 3 + 0] = (tempXrX) / (2 * deltaT);
-		vel[i * 3 + 1] = (tempYrY) / (2 * deltaT);
-		vel[i * 3 + 2] = (tempZrZ) / (2 * deltaT);
-
-		*/
-
-		/*
-		prevPos[i * 3 + 0] = particles->pos[i * 3 + 0];
-		prevPos[i * 3 + 1] = particles->pos[i * 3 + 1];
-		prevPos[i * 3 + 2] = particles->pos[i * 3 + 2];
-		*/
 		double boundaryWidth = 0;
 
 		if (c == 0) {
@@ -242,8 +106,6 @@ __global__ inline void DeviceUpdatePositions(unsigned long numParticles,
 			double velY = deviceVel[pid + i - 1];
 			double velZ = deviceVel[pid + i];
 			devKinEn[pid / 3] = velX * velX + velY * velY + velZ * velZ; // devKinEn[0] += (velX * velX + velY * velY + velZ * velZ);
-			//devKinEn[pid / 3 + 1] = 0;
-			//devKinEn[pid / 3 + 2] = 0;
 		}
 
 		++c;
@@ -285,11 +147,6 @@ __global__ inline void DeviceUpdateForces(unsigned long numParticles, double* de
 			*/
 			if (rSquared <= cutoffSquared) {
 
-				/*
-				double scaledForce = forceEvaluator->
-				EvaluateScaledForce();
-				*/
-
 				double rSquaredInv = 1 / rSquared;
 				double rSquaredInvCubed = rSquaredInv * rSquaredInv * rSquaredInv;
 				double scaledForce = rSquaredInv * rSquaredInvCubed * (2 * rSquaredInvCubed - 1);
@@ -307,13 +164,9 @@ __global__ inline void DeviceUpdateForces(unsigned long numParticles, double* de
 					cutoffSquaredInv;
 				double ecut = 4 * ((cutoffSquaredInvCubed * cutoffSquaredInvCubed) -
 					cutoffSquaredInvCubed);
-				devTotEn[pid/3] = (4 * rSquaredInvCubed *
+				devTotEn[pid / 3] = (4 * rSquaredInvCubed *
 					(rSquaredInvCubed - 1)) - ecut;
-				//devTotEn[pid / 3 + 1] = 0;
-				//devTotEn[pid / 3 + 2] = 0;
 			}
-
-
 		}
 	}
 

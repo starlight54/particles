@@ -17,7 +17,7 @@ int main(int argc, char* argv[])
 
         SimulationSpace space = SimulationSpace();
         space.InitCube(100);
-	space.AutoInitParticles(10000);
+	space.AutoInitParticles(100000);
 	//system("pause");
 	space.InitIterator(100, 0.005, 1);
 }

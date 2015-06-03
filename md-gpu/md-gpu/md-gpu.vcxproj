@@ -148,11 +148,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="configManager.h" />
-    <ClInclude Include="cudaManaged.h" />
-    <ClInclude Include="factory.h" />
     <ClInclude Include="factoryRegister.h" />
     <ClInclude Include="forceEvaluatorFactory.h" />
-    <ClInclude Include="globalDeviceHeader.h" />
     <ClInclude Include="iForceEvaluator.h" />
     <ClInclude Include="iIntegrationEvaluator.h" />
     <ClInclude Include="integrationEvaluatorFactory.h" />
@@ -162,13 +159,11 @@
     <ClInclude Include="particleSystem.h" />
     <ClInclude Include="simulationIteratorFactory.h" />
     <ClInclude Include="simulationSpace.h" />
-    <ClInclude Include="SimulatorFactory.h" />
     <ClInclude Include="velocityVerletIntegrator.h" />
     <ClInclude Include="visualiser.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="configManager.cpp" />
-    <ClCompile Include="factory.cpp" />
     <ClCompile Include="factoryRegister.cpp" />
     <ClCompile Include="forceEvaluatorFactory.cpp" />
     <ClCompile Include="iForceEvaluator.cpp" />

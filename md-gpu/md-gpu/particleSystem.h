@@ -2,7 +2,6 @@
 #define PARTICLE_SYSTEM_H
 
 #include "configManager.h"
-#include "cudaManaged.h"
 #include <math.h>
 #include <stdlib.h>
 #include "dSFMT.h"
